@@ -1,6 +1,5 @@
 package com.example.screens;
 
-import static androidx.core.content.ContextCompat.startActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("==>","Lets go!");
                 Intent intent = new Intent(MainActivity.this, MainActivity2.class);
-                intent.putExtra("name", "Daniel"); // Optional
-                intent.putExtra("number", 1); // Optional
+                intent.putExtra("name", "Välkommen! :D"); // Optional
+                intent.putExtra("number", 55); // Optional
                 startActivity(intent);
             }
         });

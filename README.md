@@ -1,42 +1,76 @@
 
 # Rapport
-
-**Skriv din rapport här!**
-
-_Du kan ta bort all text som finns sedan tidigare_.
-
-## Följande grundsyn gäller dugga-svar:
-
-- Ett kortfattat svar är att föredra. Svar som är längre än en sida text (skärmdumpar och programkod exkluderat) är onödigt långt.
-- Svaret skall ha minst en snutt programkod.
-- Svaret skall inkludera en kort övergripande förklarande text som redogör för vad respektive snutt programkod gör eller som svarar på annan teorifråga.
-- Svaret skall ha minst en skärmdump. Skärmdumpar skall illustrera exekvering av relevant programkod. Eventuell text i skärmdumpar måste vara läsbar.
-- I de fall detta efterfrågas, dela upp delar av ditt svar i för- och nackdelar. Dina för- respektive nackdelar skall vara i form av punktlistor med kortare stycken (3-4 meningar).
-
-Programkod ska se ut som exemplet nedan. Koden måste vara korrekt indenterad då den blir lättare att läsa vilket gör det lättare att hitta syntaktiska fel.
+I uppgift 4 har activities och intents för att få fram två olika sidor med hjälp av en button. 
+Det första som behövdes göras var att skapa en ny activity, det gjordes enkelt genom att skapa en tom activity fil.
+Sedan behövdes knappen läggas till i första sidans xml fil. Detta gjordes på detta sätt:
 
 ```
-function errorCallback(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            // Geolocation API stöds inte, gör något
-            break;
-        case error.POSITION_UNAVAILABLE:
-            // Misslyckat positionsanrop, gör något
-            break;
-        case error.UNKNOWN_ERROR:
-            // Okänt fel, gör något
-            break;
+ <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click here"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text"
+        app:layout_constraintVertical_bias="0.217" />
+```
+Nu har vi en knapp som finns på första sidan, men just nu går den ej att klicka på, så detta måsta fixas på följande sätt.
+Det är även här vi skapar intents för att kunna skapa en onclick så när man trycker på knappen kommer man tas till sida 2.
+
+
+```
+Button b = findViewById(R.id.button);
+
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("==>","Lets go!");
+                Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+                intent.putExtra("name", "Välkommen! :D"); // Optional
+                intent.putExtra("number", 55); // Optional
+                startActivity(intent);
+            }
+        });
+```
+Detta läggs då in i OnCreate i första sidans java fil. Nu kan man trycka på knappen och tas till andra sidan.
+Det sista som nu har gjorts är att datan som finns i intentsen skall visas som en textview på andra sidan. Det första måste göras i xml sidan för andra sidan och ser ut så här:
+
+
+```
+<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@id/text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+```
+Detta är då bara en vanlig textview som har ett id, men för att bundle datan ska visas i texten bör det också skivas kod i java filen för andra sidan.
+
+```
+protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main2);
+        TextView textView = findViewById(R.id.text);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String name = extras.getString("name");
+            int number = extras.getInt("number");
+            textView.setText(name);
+        }
     }
-}
 ```
+Nu har vi en färdig app, där man på första sidan kan trycka på en knapp som tar en till andra sidan. 
+Där det där i en textview visar upp data från bundles i intenten. 
 
-Bilder läggs i samma mapp som markdown-filen.
 
-![](android.png)
 
-Läs gärna:
+![](FirstPage.png)
+![](SecondPage.png)
 
-- Boulos, M.N.K., Warren, J., Gong, J. & Yue, P. (2010) Web GIS in practice VIII: HTML5 and the canvas element for interactive online mapping. International journal of health geographics 9, 14. Shin, Y. &
-- Wunsche, B.C. (2013) A smartphone-based golf simulation exercise game for supporting arthritis patients. 2013 28th International Conference of Image and Vision Computing New Zealand (IVCNZ), IEEE, pp. 459–464.
-- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M.C., Regnell, B., Wesslén, A. (2012) Experimentation in Software Engineering, Berlin, Heidelberg: Springer Berlin Heidelberg.
